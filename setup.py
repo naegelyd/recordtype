@@ -11,8 +11,9 @@ setup(name='recordtype',
                    'Intended Audience :: Developers',
                    'License :: OSI Approved :: Apache Software License',
                    'Topic :: Software Development :: Libraries :: Python Modules',
+                   'Programming Language :: Python :: 2.6',
                    'Programming Language :: Python :: 2.7',
                    ],
       license='LICENSE.txt',
-      py_modules=['recordtype']
+      py_modules=['recordtype'],
       )
