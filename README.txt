@@ -37,7 +37,7 @@ Creating types
 Specifying Fields
 -----------------
 
-Fields can be specified as in namedtuple, as either a string specifing
+Fields can be specified as in namedtuple: as either a string specifing
 the field names, or as a list of field names. These two uses are
 equivalent::
 
@@ -96,8 +96,8 @@ the tuple-derived classes returned by namedtuple::
 Specifying __slots__
 --------------------
 
-By default, the returned class uses __slots__, initialized to the
-field names. While this decreases memory usage by eliminating the
+By default, the returned class sets __slots__, which initialized to
+the field names. While this decreases memory usage by eliminating the
 instance dict, it also means that you cannot create new instance
 members.
 
@@ -158,3 +158,4 @@ Creating and using instances
 
 Because the type returned by recordtype is a normal Python class, you
 create instances as you would with any Python class.
+
