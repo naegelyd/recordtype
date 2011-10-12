@@ -6,7 +6,7 @@ recordtype provides a factory function, named
 recordtype.recordtype. It is similar to collections.namedtuple, with
 the following differences:
 
-* recordtype instances mutable.
+* recordtype instances are mutable.
 
 * recordtype supports per-field default values.
 
@@ -50,12 +50,13 @@ equivalent::
     Point = recordtype('Point', 'x y')
     Point = recordtype('Point', 'x,y')
 
+
 Specifying Defaults
 -------------------
 
 Per-field defaults can be specified by supplying a 2-tuple (name,
 default_value) instead of just a string for the field name. This is
-only supported when you specify a list of field names.
+only supported when you specify a list of field names::
 
     Point = recordtype('Point', [('x', 0), ('y', 0)])
     p = Point(3)
@@ -64,7 +65,7 @@ only supported when you specify a list of field names.
 
 In addition to, or instead of, these per-field defaults, you can also
 specify a "default default" which is used when no other default value
-is specified for a field.
+is specified for a field::
 
     Point = recordtype('Point', 'x y z', default_default=0)
     p = Point(y=3)
@@ -78,6 +79,7 @@ is specified for a field.
     assert p.y == 4
     assert p.z == 2
 
+
 Writing to values
 -----------------
 
@@ -89,6 +91,7 @@ the tuple-derived classes returned by namedtuple::
     p.y = 4
     assert p.x == 1
     assert p.y == 4
+
 
 Specifying __slots__
 --------------------
@@ -107,6 +110,23 @@ recordtype::
     assert p.x == 0
     assert p.y == 1
     assert p.z == 2
+
+
+Additional class members
+------------------------
+
+recordtype classes contain these members:
+
+* _asdict(): Returns a dict which maps field names to their
+  corresponding values.
+
+* _source: A string with the pure Python source code used to create
+  the recordtype class. The source makes the recordtype
+  self-documenting. It can be printed, executed using exec(), or saved
+  to a file and imported.
+
+* ._fields: Tuple of strings listing the field names. Useful for introspection.
+
 
 Renaming invalid field names
 ----------------------------
@@ -132,8 +152,9 @@ For example::
     Point = recordtype('Point', 'x x for', rename=True)
     assert Point._fields == ('x', '_1', '_2')
 
+
 Creating and using instances
 ============================
 
 Because the type returned by recordtype is a normal Python class, you
-create instances as you normally would.
+create instances as you would with any Python class.
