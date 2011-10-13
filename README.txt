@@ -20,7 +20,7 @@ Typical usage::
     Point = recordtype('Point', [('x', 0), ('y', 100)])
     p = Point()
     assert p.x == 0
-    assert p.y == y
+    assert p.y == 100
 
 In addition to per-field defaults, you can also specify a "default
 default" that will be used if a per-field default is not given::
