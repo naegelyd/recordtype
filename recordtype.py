@@ -32,6 +32,7 @@ __all__ = ['recordtype', 'NO_DEFAULT']
 
 import sys as _sys
 from keyword import iskeyword as _iskeyword
+from collections import Mapping as _Mapping
 
 NO_DEFAULT = object()
 
@@ -43,7 +44,10 @@ class _Fields(object):
         self.without_defaults = []     # List of field_name.
 
     def add_with_default(self, field_name, default):
-        self.with_defaults.append((field_name, default))
+        if default is NO_DEFAULT:
+            self.add_without_default(field_name)
+        else:
+            self.with_defaults.append((field_name, default))
 
     def add_without_default(self, field_name):
         if self.default is NO_DEFAULT:
@@ -119,15 +123,21 @@ def recordtype(typename, field_names, default=NO_DEFAULT, rename=False,
 
     if isinstance(field_names, basestring):
         # No per-field defaults. So it's like a namedtuple, but with
-        #  default.
+        #  a possible default value.
         field_names = field_names.replace(',', ' ').split()
+
+    # If field_names is a Mapping, change it to return the
+    #  (field_name, default) pairs, as if it were a list
+    if isinstance(field_names, _Mapping):
+        field_names = field_names.items()
 
     # Parse and validate the field names.  Validation serves two
     #  purposes: generating informative error messages and preventing
     #  template injection attacks.
 
-    # field_names is now a list. Walk through it, sanitizing as
-    #  needed, and add to fields.
+    # field_names is now an iterable. Walk through it,
+    # sanitizing as needed, and add to fields.
+
     seen_names = set()
     for idx, field_name in enumerate(field_names):
         if isinstance(field_name, basestring):
@@ -526,5 +536,25 @@ if __name__ == '__main__':
         def test_type_begins_with_underscore(self):
             Point = recordtype('_Point', '')
             p = Point()
+
+        def test_mapping(self):
+            # use a regular dict so testing with 2.6 is still possible
+            # do not make any assumptions about field order
+            Point = recordtype('Point', {'x': 0, 'y': 100})
+            p = Point()
+            self.assertEqual(p.x, 0)
+            self.assertEqual(p.y, 100)
+
+            # in 2.7, test with an OrderedDict
+
+        def test_NO_DEFAULT(self):
+            # NO_DEFAULT is only really useful with we're using a mapping
+            #  plus a default value. it's the only way to specify that
+            #  some of the fields use the default.
+            Point = recordtype('Point', {'x':0, 'y':NO_DEFAULT}, default=5)
+            p = Point()
+            self.assertEqual(p.x, 0)
+            self.assertEqual(p.y, 5)
+
 
     unittest.main()

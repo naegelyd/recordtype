@@ -40,6 +40,17 @@ Or, you can specify per-field default values::
     assert p.x == 0
     assert p.y == 100
 
+You can also specify a the per-field defaults with a mapping, instead
+of a list. Note that this is only useful with an ordered mapping, such
+as an OrderedDict::
+
+    from collections import OrderedDict
+    Point = recordtype('Point', OrderedDict((('y', 0),
+                                             ('x', 100))))
+    p = Point()
+    assert p.x == 100
+    assert p.y == 0
+
 The default value will only be used if it is provided and a per-field
 default is not used::
 
@@ -47,6 +58,18 @@ default is not used::
     p = Point()
     assert p.x == 10
     assert p.y == 100
+
+If you use a mapping, the value NO_DEFAULT is convenient to specify
+that a field uses the default value::
+
+    from recordtype import NO_DEFAULT
+    Point = recordtype('Point', OrderedDict((('y', NO_DEFAULT),
+                                             ('x', 100))),
+                                default=5)
+    p = Point()
+    assert p.x == 100
+    assert p.y == 5
+
 
 Creating types
 ==============
@@ -96,6 +119,22 @@ is specified::
     assert p.y == 4
     assert p.z == 2
 
+In addition to supplying the field names as a list of 2-tuples, you
+can also specify a mapping. The keys will be the field names, and the
+values will be the per-field default values. This is most useful with
+an OrderedDict, as the order of the fields will then be deterministic.
+The module variable NO_DEFAULT can be specified if you want a field to
+use the per-type default value instead of specifying it with a field::
+
+    Point = recordtype('Point', OrderedDict((('x', 0),
+                                             ('y', NO_DEFAULT),
+                                             ('z', 0),
+                                             )),
+                                default=4)
+    p = Point(z=2)
+    assert p.x == 0
+    assert p.y == 4
+    assert p.z == 2
 
 Writing to values
 -----------------

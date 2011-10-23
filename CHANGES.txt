@@ -7,6 +7,7 @@ x.y
 * Improve documentation examples.
 * Renamed "default_default" to just "default".
 * Expose "NO_DEFAULT".
+* Support mapping objects in addition to strings and lists for field_names.
 
 0.2 2011-10-13 Eric V. Smith
 ----------------------------
