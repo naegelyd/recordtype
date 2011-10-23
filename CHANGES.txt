@@ -6,6 +6,7 @@ x.y
 * Added "python setup.py test" support to run unittests.
 * Improve documentation examples.
 * Renamed "default_default" to just "default".
+* Expose "NO_DEFAULT".
 
 0.2 2011-10-13 Eric V. Smith
 ----------------------------

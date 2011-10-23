@@ -28,26 +28,26 @@
 # keyword-only.
 ########################################################################
 
-__all__ = ['recordtype']
+__all__ = ['recordtype', 'NO_DEFAULT']
 
 import sys as _sys
 from keyword import iskeyword as _iskeyword
 
-_sentinel = object()
+NO_DEFAULT = object()
 
-# keep track of fields, both with and without defaults
+# Keep track of fields, both with and without defaults.
 class _Fields(object):
     def __init__(self, default):
         self.default = default
-        self.with_defaults = []        # list of (field_name, default)
-        self.without_defaults = []     # list of field_name
+        self.with_defaults = []        # List of (field_name, default).
+        self.without_defaults = []     # List of field_name.
 
     def add_with_default(self, field_name, default):
         self.with_defaults.append((field_name, default))
 
     def add_without_default(self, field_name):
-        if self.default is _sentinel:
-            # no default. there can't be any defaults already specified
+        if self.default is NO_DEFAULT:
+            # No default. There can't be any defaults already specified.
             if self.with_defaults:
                 raise ValueError('field {0} without a default follows fields '
                                  'with defaults'.format(field_name))
@@ -56,8 +56,8 @@ class _Fields(object):
             self.add_with_default(field_name, self.default)
 
 
-# used for both the type name and field names. if is_type_name is
-#  False, seen_names must be provided raise ValueError if the name is
+# Used for both the type name and field names. If is_type_name is
+#  False, seen_names must be provided. Raise ValueError if the name is
 #  bad.
 def _check_name(name, is_type_name=False, seen_names=None):
     if len(name) == 0:
@@ -85,8 +85,8 @@ def _check_name(name, is_type_name=False, seen_names=None):
                              '{0!r}'.format(name))
 
 
-# validate a field name. if it's a bad name, and if rename is True,
-#  then return a 'sanitized' name. raise ValueError if the name is bad.
+# Validate a field name. If it's a bad name, and if rename is True,
+#  then return a 'sanitized' name. Raise ValueError if the name is bad.
 def _check_field_name(name, seen_names, rename, idx):
     try:
         _check_name(name, seen_names=seen_names)
@@ -101,33 +101,33 @@ def _check_field_name(name, seen_names, rename, idx):
 
 
 def _default_name(field_name):
-    # can't just use _{0}_default, because then a field name '_0'
-    #  would give a default name of '__0_default'. since it begins
-    #  with 2 underscores, the name gets mangled
+    # Can't just use _{0}_default, because then a field name '_0'
+    #  would give a default name of '__0_default'. Since it begins
+    #  with 2 underscores, the name gets mangled.
     return '_x_{0}_default'.format(field_name)
 
 
-def recordtype(typename, field_names, default=_sentinel, rename=False,
+def recordtype(typename, field_names, default=NO_DEFAULT, rename=False,
                use_slots=True):
     # field_names must be a string or an iterable, consisting of fieldname
-    #  strings or 2-tuples. each 2-tuple is of the form (fieldname,
-    #  default)
+    #  strings or 2-tuples. Each 2-tuple is of the form (fieldname,
+    #  default).
 
     fields = _Fields(default)
 
     _check_name(typename, is_type_name=True)
 
     if isinstance(field_names, basestring):
-        # no per-field defaults. so it's like a namedtuple, but with
-        #  default
+        # No per-field defaults. So it's like a namedtuple, but with
+        #  default.
         field_names = field_names.replace(',', ' ').split()
 
     # Parse and validate the field names.  Validation serves two
     #  purposes: generating informative error messages and preventing
     #  template injection attacks.
 
-    # field_names is now a list. walk through it, sanitizing as
-    #  needed, and add to fields
+    # field_names is now a list. Walk through it, sanitizing as
+    #  needed, and add to fields.
     seen_names = set()
     for idx, field_name in enumerate(field_names):
         if isinstance(field_name, basestring):
@@ -140,7 +140,7 @@ def recordtype(typename, field_names, default=_sentinel, rename=False,
                     raise ValueError('field_name must be a 2-tuple: '
                                      '{0!r}'.format(field_name))
             except TypeError:
-                # field_name doesn't have a __len__
+                # field_name doesn't have a __len__.
                 raise ValueError('field_name must be a 2-tuple: '
                                  '{0!r}'.format(field_name))
             default = field_name[1]
@@ -151,18 +151,16 @@ def recordtype(typename, field_names, default=_sentinel, rename=False,
     all_field_names = fields.without_defaults + [name for name, default in
                                                  fields.with_defaults]
 
-    # Create and fill-in the class template
-    num_fields = len(all_field_names)
+    # Create and fill-in the class template.
     argtxt = ', '.join(all_field_names)
-    quoted_argtxt = ', '.join(repr(field_name)
-                              for field_name in all_field_names)
+    quoted_argtxt = ', '.join(repr(name) for name in all_field_names)
     initargs = ', '.join(fields.without_defaults +
                          ['{0}={1}'.format(name, _default_name(name))
                           for name, default in fields.with_defaults])
     reprtxt = ', '.join('{0}={{{0}}}'.format(f) for f in all_field_names)
     dicttxt = ', '.join('{0!r}:self.{0}'.format(f) for f in all_field_names)
 
-    # these values change depending on whether or not we have any fields
+    # These values change depending on whether or not we have any fields.
     if all_field_names:
         inittxt = '; '.join('self.{0}={0}'.format(f) for f in all_field_names)
         eqtxt = 'and ' + ' and '.join('self.{0}==other.{0}'.format(f)
@@ -174,7 +172,7 @@ def recordtype(typename, field_names, default=_sentinel, rename=False,
         getstate = 'return ' + tupletxt
         setstate = tupletxt + ' = state'
     else:
-        # no fields at all in this record
+        # No fields at all in this recordtype.
         inittxt = 'pass'
         eqtxt = ''
         itertxt = 'return iter([])'
@@ -225,16 +223,16 @@ def recordtype(typename, field_names, default=_sentinel, rename=False,
                                    dicttxt=dicttxt,
                                    reprtxt=reprtxt,
                                    eqtxt=eqtxt,
-                                   num_fields=num_fields,
+                                   num_fields=len(all_field_names),
                                    itertxt=itertxt,
                                    getstate=getstate,
                                    setstate=setstate,
                                    slotstxt=slotstxt,
                                    )
 
-    # execute the template string in a temporary namespace
+    # Execute the template string in a temporary namespace.
     namespace = {}
-    # add the default values into the namespace
+    # Add the default values into the namespace.
     for name, default in fields.with_defaults:
         namespace[_default_name(name)] = default
 
@@ -243,8 +241,8 @@ def recordtype(typename, field_names, default=_sentinel, rename=False,
     except SyntaxError as e:
         raise SyntaxError(e.message + ':\n' + template)
 
-    # find the class we created, set it's _source attribute to the template
-    #  used to create it
+    # Find the class we created, set its _source attribute to the
+    #   template used to create it.
     cls = namespace[typename]
     cls._source = template
 
