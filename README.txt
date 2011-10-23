@@ -41,8 +41,8 @@ Or, you can specify per-field default values::
     assert p.y == 100
 
 You can also specify a the per-field defaults with a mapping, instead
-of a list. Note that this is only useful with an ordered mapping, such
-as an OrderedDict::
+of an interable. Note that this is only useful with an ordered
+mapping, such as an OrderedDict::
 
     from collections import OrderedDict
     Point = recordtype('Point', OrderedDict((('y', 0),
@@ -78,7 +78,7 @@ Specifying Fields
 -----------------
 
 Fields can be specified as in namedtuple: as either a string specifing
-the field names, or as a list of field names. These two uses are
+the field names, or as a iterable of field names. These two uses are
 equivalent::
 
     Point = recordtype('Point', 'x y')
@@ -119,12 +119,13 @@ is specified::
     assert p.y == 4
     assert p.z == 2
 
-In addition to supplying the field names as a list of 2-tuples, you
-can also specify a mapping. The keys will be the field names, and the
-values will be the per-field default values. This is most useful with
-an OrderedDict, as the order of the fields will then be deterministic.
-The module variable NO_DEFAULT can be specified if you want a field to
-use the per-type default value instead of specifying it with a field::
+In addition to supplying the field names as an iterable of 2-tuples,
+you can also specify a mapping. The keys will be the field names, and
+the values will be the per-field default values. This is most useful
+with an OrderedDict, as the order of the fields will then be
+deterministic.  The module variable NO_DEFAULT can be specified if you
+want a field to use the per-type default value instead of specifying
+it with a field::
 
     Point = recordtype('Point', OrderedDict((('x', 0),
                                              ('y', NO_DEFAULT),

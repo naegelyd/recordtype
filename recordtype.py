@@ -556,5 +556,11 @@ if __name__ == '__main__':
             self.assertEqual(p.x, 0)
             self.assertEqual(p.y, 5)
 
+        def test_iterabale(self):
+            Point = recordtype('Point', iter(['x', 'y']))
+            p = Point(1, 2)
+            self.assertEqual(p.x, 1)
+            self.assertEqual(p.y, 2)
+
 
     unittest.main()
