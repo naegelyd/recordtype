@@ -1,8 +1,9 @@
 Change log
 ==========
 
-x.y
+1.0 2011-10-23 Eric V. Smith
 ----------------------------
+* Stabilize API, move to version 1.0.
 * Added "python setup.py test" support to run unittests.
 * Improve documentation examples.
 * Renamed "default_default" to just "default".

@@ -14,13 +14,13 @@ class PyTest(Command):
 
 
 setup(name='recordtype',
-      version='0.2',
+      version='1.0',
       url='http://www.trueblade.com/recordtype',
       author='Eric V. Smith',
       author_email='eric@trueblade.com',
       description='Similar to namedtuple, but instances are mutable.',
       long_description=open('README.txt').read() + open('CHANGES.txt').read(),
-      classifiers=['Development Status :: 4 - Beta',
+      classifiers=['Development Status :: 5 - Production/Stable',
                    'Intended Audience :: Developers',
                    'License :: OSI Approved :: Apache Software License',
                    'Topic :: Software Development :: Libraries :: Python Modules',
