@@ -10,7 +10,7 @@ the following differences:
 
 * recordtype supports per-field default values.
 
-* recordtype supports an optional "default default", to be used by all
+* recordtype supports an optional default value, to be used by all
   fields do not have an explicit default value.
 
 Typical usage
@@ -28,7 +28,7 @@ You can use recordtype like a mutable namedtuple::
 
 Or, you can specify a default value for all fields::
 
-    Point = recordtype('Point', 'x y', default_default=3)
+    Point = recordtype('Point', 'x y', default=3)
     p = Point(y=2)
     assert p.x == 3
     assert p.y == 2
@@ -43,7 +43,7 @@ Or, you can specify per-field default values::
 The default value will only be used if it is provided and a per-field
 default is not used::
 
-    Point = recordtype('Point', ['x', ('y', 100)], default_default=10)
+    Point = recordtype('Point', ['x', ('y', 100)], default=10)
     p = Point()
     assert p.x == 10
     assert p.y == 100
@@ -81,16 +81,16 @@ only supported when you specify a list of field names::
     assert p.y == 0
 
 In addition to, or instead of, these per-field defaults, you can also
-specify a "default default" which is used when no other default value
-is specified for a field::
+specify a default value which is used when no per-field default value
+is specified::
 
-    Point = recordtype('Point', 'x y z', default_default=0)
+    Point = recordtype('Point', 'x y z', default=0)
     p = Point(y=3)
     assert p.x == 0
     assert p.y == 3
     assert p.z == 0
 
-    Point = recordtype('Point', [('x', 0), 'y', ('z', 0)], default_default=4)
+    Point = recordtype('Point', [('x', 0), 'y', ('z', 0)], default=4)
     p = Point(z=2)
     assert p.x == 0
     assert p.y == 4

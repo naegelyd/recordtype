@@ -37,8 +37,8 @@ _sentinel = object()
 
 # keep track of fields, both with and without defaults
 class _Fields(object):
-    def __init__(self, default_default):
-        self.default_default = default_default
+    def __init__(self, default):
+        self.default = default
         self.with_defaults = []        # list of (field_name, default)
         self.without_defaults = []     # list of field_name
 
@@ -46,14 +46,14 @@ class _Fields(object):
         self.with_defaults.append((field_name, default))
 
     def add_without_default(self, field_name):
-        if self.default_default is _sentinel:
+        if self.default is _sentinel:
             # no default. there can't be any defaults already specified
             if self.with_defaults:
                 raise ValueError('field {0} without a default follows fields '
                                  'with defaults'.format(field_name))
             self.without_defaults.append(field_name)
         else:
-            self.add_with_default(field_name, self.default_default)
+            self.add_with_default(field_name, self.default)
 
 
 # used for both the type name and field names. if is_type_name is
@@ -107,19 +107,19 @@ def _default_name(field_name):
     return '_x_{0}_default'.format(field_name)
 
 
-def recordtype(typename, field_names, default_default=_sentinel, rename=False,
+def recordtype(typename, field_names, default=_sentinel, rename=False,
                use_slots=True):
     # field_names must be a string or an iterable, consisting of fieldname
     #  strings or 2-tuples. each 2-tuple is of the form (fieldname,
     #  default)
 
-    fields = _Fields(default_default)
+    fields = _Fields(default)
 
     _check_name(typename, is_type_name=True)
 
     if isinstance(field_names, basestring):
         # no per-field defaults. so it's like a namedtuple, but with
-        #  default_default
+        #  default
         field_names = field_names.replace(',', ' ').split()
 
     # Parse and validate the field names.  Validation serves two
@@ -340,7 +340,7 @@ if __name__ == '__main__':
             self.assertEqual((p.x, p.y), (10, 20))
             self.assertEqual(p._asdict(), {'x':10, 'y':20})
 
-        def test_default_default(self):
+        def test_default(self):
             Point = recordtype('Point', 'x y z', 100)
             self.assertEqual(Point(), Point(100, 100, 100))
             self.assertEqual(Point(10), Point(10, 100, 100))
@@ -348,7 +348,7 @@ if __name__ == '__main__':
             self.assertEqual(Point(10, 20, 30), Point(10, 20, 30))
             self.assertEqual(Point()._asdict(), {'x':100, 'y':100, 'z':100})
 
-        def test_default_default_list(self):
+        def test_default_list(self):
             Point = recordtype('Point', 'x y z'.split(), 100)
             self.assertEqual(Point(), Point(100, 100, 100))
             self.assertEqual(Point(10), Point(10, 100, 100))
@@ -356,14 +356,14 @@ if __name__ == '__main__':
             self.assertEqual(Point(10, 20, 30), Point(10, 20, 30))
             self.assertEqual(Point()._asdict(), {'x':100, 'y':100, 'z':100})
 
-        def test_default_default_and_specified_default(self):
+        def test_default_and_specified_default(self):
             Point = recordtype('Point', ['x', ('y', 10), ('z', 20)], 100)
             self.assertEqual(Point(), Point(100, 10, 20))
             self.assertEqual(Point(0), Point(0, 10, 20))
             self.assertEqual(Point(0, 1), Point(0, 1, 20))
             self.assertEqual(Point(0, 1, 2), Point(0, 1, 2))
 
-            # default_default doesn't just have to apply to the last field
+            # default doesn't just have to apply to the last field
             Point = recordtype('Point', [('x', 0), 'y', ('z', 20)], 100)
             self.assertEqual(Point(), Point(0, 100, 20))
 
@@ -383,12 +383,12 @@ if __name__ == '__main__':
             self.assertNotEqual(p0, Point('100'))
 
         def test_default_order(self):
-            # with no default_default, can't have a field without a
+            # with no default, can't have a field without a
             #  default follow fields with defaults
             self.assertRaises(ValueError, recordtype, 'Point',
                               ['x', ('y', 10), 'z'])
 
-            # but with a default_default, you can
+            # but with a default, you can
             Point = recordtype('Point', ['x', ('y', 10), 'z'], -1)
             self.assertEqual(Point(0), Point(0, 10, -1))
             self.assertEqual(Point(z=0), Point(-1, 10, 0))
