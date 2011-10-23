@@ -1,4 +1,17 @@
-from distutils.core import setup
+from distutils.core import setup, Command
+
+# run our tests
+class PyTest(Command):
+    user_options = []
+    def initialize_options(self):
+        pass
+    def finalize_options(self):
+        pass
+    def run(self):
+        import sys, subprocess
+        errno = subprocess.call([sys.executable, 'recordtype.py'])
+        raise SystemExit(errno)
+
 
 setup(name='recordtype',
       version='0.2',
@@ -16,4 +29,6 @@ setup(name='recordtype',
                    ],
       license='LICENSE.txt',
       py_modules=['recordtype'],
+
+      cmdclass = {'test': PyTest},
       )
