@@ -14,7 +14,7 @@ the following differences:
   fields do not have an explicit default value.
 
 Typical usage
--------------
+=============
 
 You can use recordtype like a mutable namedtuple::
 
@@ -72,10 +72,10 @@ that a field uses the default value::
 
 
 Creating types
-==============
+--------------
 
 Specifying Fields
------------------
+=================
 
 Fields can be specified as in namedtuple: as either a string specifing
 the field names, or as a iterable of field names. These two uses are
@@ -92,7 +92,7 @@ equivalent::
 
 
 Specifying Defaults
--------------------
+===================
 
 Per-field defaults can be specified by supplying a 2-tuple (name,
 default_value) instead of just a string for the field name. This is
@@ -138,7 +138,7 @@ it with a field::
     assert p.z == 2
 
 Writing to values
------------------
+=================
 
 The objects retured by the factory function are fully writable, unlike
 the tuple-derived classes returned by namedtuple::
@@ -151,7 +151,7 @@ the tuple-derived classes returned by namedtuple::
 
 
 Specifying __slots__
---------------------
+====================
 
 By default, the returned class sets __slots__, which is initialized to
 the field names. While this decreases memory usage by eliminating the
@@ -170,7 +170,7 @@ recordtype::
 
 
 Additional class members
-------------------------
+========================
 
 recordtype classes contain these members:
 
@@ -186,7 +186,7 @@ recordtype classes contain these members:
 
 
 Renaming invalid field names
-----------------------------
+============================
 
 This functionality is identical to namedtuple. If you specify
 rename=True, then any invalid field names are changed to _0, _1,
@@ -211,7 +211,7 @@ For example::
 
 
 Creating and using instances
-============================
+----------------------------
 
 Because the type returned by recordtype is a normal Python class, you
 create instances as you would with any Python class.
