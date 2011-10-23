@@ -13,23 +13,40 @@ the following differences:
 * recordtype supports an optional "default default", to be used by all
   fields do not have an explicit default value.
 
-Typical usage::
+Typical usage
+-------------
+
+You can use recordtype like a mutable namedtuple::
 
     from recordtype import recordtype
+
+    Point = recordtype('Point', 'x y')
+    p = Point(1, 3)
+    p.x = 2
+    assert p.x == 2
+    assert p.y == 3
+
+Or, you can specify a default value for all fields::
+
+    Point = recordtype('Point', 'x y', default_default=3)
+    p = Point(y=2)
+    assert p.x == 3
+    assert p.y == 2
+
+Or, you can specify per-field default values::
 
     Point = recordtype('Point', [('x', 0), ('y', 100)])
     p = Point()
     assert p.x == 0
     assert p.y == 100
 
-In addition to per-field defaults, you can also specify a "default
-default" that will be used if a per-field default is not given::
+The default value will only be used if it is provided and a per-field
+default is not used::
 
-    Point = recordtype('Point', 'x y z', default_default=0)
-    p = Point(y=3)
-    assert p.x == 0
-    assert p.y == 3
-    assert p.z == 0
+    Point = recordtype('Point', ['x', ('y', 100)], default_default=10)
+    p = Point()
+    assert p.x == 10
+    assert p.y == 100
 
 Creating types
 ==============
@@ -96,7 +113,7 @@ the tuple-derived classes returned by namedtuple::
 Specifying __slots__
 --------------------
 
-By default, the returned class sets __slots__, which initialized to
+By default, the returned class sets __slots__, which is initialized to
 the field names. While this decreases memory usage by eliminating the
 instance dict, it also means that you cannot create new instance
 members.
@@ -125,7 +142,7 @@ recordtype classes contain these members:
   self-documenting. It can be printed, executed using exec(), or saved
   to a file and imported.
 
-* ._fields: Tuple of strings listing the field names. Useful for introspection.
+* _fields: Tuple of strings listing the field names. Useful for introspection.
 
 
 Renaming invalid field names

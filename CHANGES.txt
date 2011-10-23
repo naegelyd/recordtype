@@ -1,10 +1,15 @@
 Change log
 ==========
 
+x.y
+----------------------------
+* Added "python setup.py test" support to run unittests.
+* Improve documentation examples.
+
 0.2 2011-10-13 Eric V. Smith
 ----------------------------
-Fix a typo in the documentation, no code changes.
+* Fix a typo in the documentation, no code changes.
 
 0.1 2011-10-12 Eric V. Smith
 ----------------------------
-Initial release.
+* Initial release.
