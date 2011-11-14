@@ -2,6 +2,9 @@
 recordtype
 ===========
 
+Overview
+========
+
 recordtype provides a factory function, named
 recordtype.recordtype. It is similar to collections.namedtuple, with
 the following differences:
