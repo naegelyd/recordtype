@@ -1,6 +1,12 @@
 Change log
 ==========
 
+1.1 2011-11-14 Eric V. Smith
+----------------------------
+* No API or code changes.
+* Fixed project URL in setup.py.
+* Fixed license description in setup.py.
+
 1.0 2011-10-23 Eric V. Smith
 ----------------------------
 * Stabilize API, move to version 1.0.
