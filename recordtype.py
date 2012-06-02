@@ -261,7 +261,7 @@ def recordtype(typename, field_names, default=NO_DEFAULT, rename=False,
     #  enviroments where sys._getframe is not defined (Jython for
     #  example).
     if hasattr(_sys, '_getframe') and _sys.platform != 'cli':
-        cls.__module__ = _sys._getframe(1).f_globals['__name__']
+        cls.__module__ = _sys._getframe(1).f_globals.get('__name__', '__main__')
 
     return cls
 

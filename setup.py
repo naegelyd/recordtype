@@ -14,7 +14,7 @@ class PyTest(Command):
 
 
 setup(name='recordtype',
-      version='1.1',
+      version='1.2',
       url='https://bitbucket.org/ericvsmith/recordtype',
       author='Eric V. Smith',
       author_email='eric@trueblade.com',
