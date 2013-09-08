@@ -1,4 +1,5 @@
-from distutils.core import setup, Command
+from distutils.core import Command
+from setuptools import setup
 
 # run our tests
 class PyTest(Command):
@@ -30,5 +31,6 @@ setup(name='recordtype',
       license='Apache License Version 2.0',
       py_modules=['recordtype'],
 
-      cmdclass = {'test': PyTest},
+      cmdclass={'test': PyTest},
+      install_requires=['six'],
       )
