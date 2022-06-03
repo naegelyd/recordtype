@@ -32,7 +32,10 @@ __all__ = ['recordtype', 'NO_DEFAULT']
 
 import sys as _sys
 from keyword import iskeyword as _iskeyword
-from collections import Mapping as _Mapping
+if _sys.version_info[:2] >= (3, 8):
+    from collections.abc import Mapping as _Mapping
+else: 
+    from collections import Mapping as _Mapping
 
 from six import exec_, string_types
 
